@@ -1,61 +1,66 @@
-// ===============================================================================
-// LOAD DATA
-// We are linking our routes to a series of "data" sources.
-// These data sources hold arrays of information on table-data, waitinglist, etc.
-// ===============================================================================
 
-var friendsData = require("../data/friends");
+var friends = require("../data/friends.js");
 
 // ===============================================================================
 // ROUTING
 // ===============================================================================
 
 module.exports = function(app) {
-  // API GET Requests
-  // Below code handles when users "visit" a page.
-  // In each of the below cases when a user visits a link
-  // (ex: localhost:PORT/api/admin... they are shown a JSON of the data in the table)
-  // ---------------------------------------------------------------------------
 
+  // API GET Requests for JSON friends list
+  
   app.get("/api/friends", function(req, res) {
-    res.json(friendsData);
+    res.json(friends);
   });
 
+// API Post request user input form submit to server 
   app.post("/api/friends", function(req, res) {
-    res.json(friendsData);
-  });
+  // set initial Match and first scoreDiff to compare 
+   var Match ={
+     name: "",
+     photo: "",
+     scoreDiff: 500
+   };
 
-  // API POST Requests
-  // Below code handles when a user submits a form and thus submits data to the server.
-  // In each of the below cases, when a user submits form data (a JSON object)
-  // ...the JSON is pushed to the appropriate JavaScript array
-  // (ex. User fills out a reservation request... this data is then sent to the server...
-  // Then the server saves the data to the tableData array)
-  // ---------------------------------------------------------------------------
+// Variables to hold user input info 
+var userData =req.body;
+var userScores =userData.scores;
+var userName =userData.name;
+var userPhoto =userData.photo
+  
+// Variable to hold difference between user score and friend score 
+var Difference =0;
 
-  app.post("/api/friends", function(req, res) {
-    // Note the code here. Our "server" will respond to requests and let users know if they have a table or not.
-    // It will do this by sending out the value "true" have a table
-    // req.body is available since we're using the body parsing middleware
-    if (tableData.length < 5) {
-      tableData.push(req.body);
-      res.json(true);
+//set number of questions to 10
+var numberQuestions =10;
+
+//use for loop to go through array of friends to get each friends scores
+for (var i=0; i<friends.length -1;i++){
+ console.log(friends[i].name);
+
+ //reset Difference variable to start count of next friend to compare
+  Difference =0;
+
+//loop to get absolute difference between friend and user scores
+for( var j=0;j< numberQuestions;j++) {
+Difference += Math.abs(parseInt(userScores[j])- parseInt(friends[i].scores[j]));
+
+//compare to see if current difference score is best match 
+if (Difference <= Match.scoreDiff){
+//set to new best match
+
+  Match.name =friends[i].name;
+  Match.photo =friends[i].photo;
+  Match.scoreDiff = Difference;
+        }
     }
-    else {
-      waitListData.push(req.body);
-      res.json(false);
-    }
-  });
+}
+// push to database
+friends.push(userData);
 
-  // ---------------------------------------------------------------------------
-  // I added this below code so you could clear out the table while working with the functionality.
-  // Don"t worry about it!
+// return Json data with users bestMatch
+res.json(Match)
 
-  app.post("/api/clear", function(req, res) {
-    // Empty out the arrays of data
-    tableData.length = 0;
-    waitListData.length = 0;
+ });
 
-    res.json({ ok: true });
-  });
 };

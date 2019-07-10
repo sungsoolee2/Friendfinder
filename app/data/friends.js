@@ -1,7 +1,7 @@
 // data array to hold friends//
 
-var friendsArray = [{
-    "name": "Ahmed",
+var friends = [{
+    "name": "Ahmed Ahmed",
     "photo": "https://media.licdn.com/mpr/mpr/shrinknp_400_400/p/6/005/064/1bd/3435aa3.jpg",
     "scores": [
         5,
@@ -695,4 +695,4 @@ var friendsArray = [{
 
 
 //export the array//
-module.exports = friendsArray;
+module.exports = friends;
