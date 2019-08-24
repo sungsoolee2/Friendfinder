@@ -10,8 +10,8 @@ Built using Node and Express.js server
 
 ## Screen Shots
 Landing Page
-![Screen shot](./app/public/assets/friend1.png)
+![Screen shot](./app/public/friend1.png)
 
 Survey
-![Screen shot2](./app/public/assets/friend2.png)
+![Screen shot2](./app/public/friend2.png)
 
